@@ -8,12 +8,11 @@
           <div class="row">
             <div>
               soduko
-              <input type="number" :value="board_id" @change="e=> board_id = e.target.value"/>
+              <input type="number"/>
             </div>
           </div>
           <div class="row">
-            <button type="button" class="btn btn-secondary btn-lg" id="load-btn"
-                    @click="load_board()">Load
+            <button type="button" class="btn btn-secondary btn-lg" id="load-btn">Load
             </button>
           </div>
           <div class="row mt-5">
@@ -23,18 +22,16 @@
                         type="button"
                         class="btn btn-light btn-lg mt-1"
                         id="fill-pencil-marks-btn"
-                        @click="fill_pencil_marks()"
                 >fill pencil marks
                 </button>
                 <button
                         type="button"
                         class="btn btn-dark btn-lg mt-1"
                         id="suggest-btn"
-                        @click="get_next_step()"
                 >Suggest next move
                 </button>
                 <div id="reason">reason
-                  <div v-text="reason"></div>
+                  <div> reason </div>
                 </div>
               </div>
             </div>
@@ -46,10 +43,10 @@
             <div class="board" id="sudoku0">
               {% with ''|center:9 as range %}
               {% for i in range %}
-                <div class="square" v-for="(n,i) in 9" :key="i">
+                <div class="square">
                   {% for j in range %}
 
-                    <div class="cell" tabindex="0" v-for="(m,j) in 9" :key="j">
+                    <div class="cell" tabindex="0">
 
                     </div>
                   {% endfor %}
