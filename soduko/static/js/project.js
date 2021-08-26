@@ -2,22 +2,8 @@
 "use strict";
 
 document.addEventListener("DOMContentLoaded", function () {
-    function getCookie(name) {
-        let cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-            const cookies = document.cookie.split(';');
-            for (let i = 0; i < cookies.length; i++) {
-                const cookie = cookies[i].trim();
-                // Does this cookie string begin with the name we want?
-                if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
-                }
-            }
-        }
-        return cookieValue;
-    }
-    const csrftoken = getCookie('csrftoken');
+    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
 
     window.focus_cell = {
         index: -1,
@@ -26,7 +12,7 @@ document.addEventListener("DOMContentLoaded", function () {
     };
 
     const query_soduko_cell = (id, square, cell) => {
-        return document.querySelector(`#sudoku${id} > div:nth-child(${square}) > div:nth-child(${cell})`);
+        return document.querySelector(`div.square:nth-child(${square}) > div:nth-child(${cell})`);
     }
 
     const get_cell_according_to_row_and_col = (row, col, id) => {
@@ -140,20 +126,26 @@ document.addEventListener("DOMContentLoaded", function () {
             // socket.emit('solve', {board: board, id: id});
         }
     }
-
-    document.querySelector("#load-btn").onclick = function () {
+    const stripTrailingSlash = (str) => {
+        return str.endsWith('/') ?
+            str.slice(0, -1) :
+            str;
+    };
+    document.querySelector("#load-btn").onclick = async function () {
         const idx = document.querySelector(".col-lg-3 > div:nth-child(1) > div:nth-child(1) > input:nth-child(1)").value
+
+        const data_url = document.querySelector("#load-btn").attributes['data-url']
+
+        let url = new URL(stripTrailingSlash(data_url.baseURI) + data_url.value + idx)
         const request = new Request(
-            URL,
+            url,
             {headers: {'X-CSRFToken': csrftoken}}
         );
-        fetch(request, {
+        const json = await fetch(request, {
             method: 'POST',
             mode: 'same-origin'  // Do not send CSRF token to another domain.
-        }).then(function (response) {
-// ...
-        });
-
+        }).then(res => res.json());
+       update_board(json)
     }
 
 
@@ -170,6 +162,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     if (board[i][j] > 0) {
                         set_div_pencil_mode(div, false)
                         div.textContent = board[i][j]
+                        console.log(div)
+                        console.log(board[i][j])
                         div.disabled = true
                         div.style.backgroundColor = "lightgray"
                         div.pencil_mode = false
@@ -179,7 +173,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         div.disabled = false
                         if (options && options[i][j]) {
                             set_div_pencil_mode(div, true)
-                            numbers = options[i][j]
+                            let numbers = options[i][j]
                             numbers.sort()
                             div.textContent = numbers.join(" ")
                         } else {
