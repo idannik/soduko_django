@@ -132,11 +132,9 @@ document.addEventListener("DOMContentLoaded", function () {
             str;
     };
     document.querySelector("#load-btn").onclick = async function () {
-        const idx = document.querySelector(".col-lg-3 > div:nth-child(1) > div:nth-child(1) > input:nth-child(1)").value
 
         const data_url = document.querySelector("#load-btn").attributes['data-url']
-
-        let url = new URL(stripTrailingSlash(data_url.baseURI) + data_url.value + idx)
+        let url = new URL(stripTrailingSlash(data_url.baseURI) + data_url.value)
         const request = new Request(
             url,
             {headers: {'X-CSRFToken': csrftoken}}

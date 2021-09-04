@@ -21,8 +21,7 @@ def get_a_random_board(level="easy"):
 
 
 class Sudoku:
-    def __init__(self, board_idx):
-        print(f"Picked {LEVEL} board: {board_idx}")
+    def __init__(self):
         data = requests.get(
             f"https://sugoku.herokuapp.com/board?difficulty=medium"
         ).json()
