@@ -106,7 +106,7 @@ document.addEventListener("DOMContentLoaded", function () {
     init_cell_on_click()
 
 
-    document.querySelector("#suggest-btn").onclick = function () {
+    function get_board() {
         let board = []
         for (let id = 0; id < 1; id++) {
             for (let i = 0; i < 9; i++) {
@@ -123,27 +123,47 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
                 board[i] = row
             }
-            // socket.emit('solve', {board: board, id: id});
         }
+        return board;
+    }
+
+    document.querySelector("#fill-pencil-marks-btn").onclick = function () {
+        let board = get_board();
+        console.log(board);
+
+    }
+
+    document.querySelector("#suggest-btn").onclick = function () {
+        let board = get_board();
+        console.log(board)
     }
     const stripTrailingSlash = (str) => {
         return str.endsWith('/') ?
             str.slice(0, -1) :
             str;
     };
-    document.querySelector("#load-btn").onclick = async function () {
 
-        const data_url = document.querySelector("#load-btn").attributes['data-url']
-        let url = new URL(stripTrailingSlash(data_url.baseURI) + data_url.value)
+    function get_url_for_fetch(selector) {
+        const data_url = document.querySelector(selector).attributes['data-url']
+        return new URL(stripTrailingSlash(data_url.baseURI) + data_url.value);
+    }
+
+    async function fetch_for_django(selector, data={}) {
+        let url = get_url_for_fetch(selector);
         const request = new Request(
             url,
-            {headers: {'X-CSRFToken': csrftoken}}
+            {headers: {'X-CSRFToken': csrftoken, 'Content-Type': 'application/json'}}
         );
         const json = await fetch(request, {
+            body: JSON.stringify(data),
             method: 'POST',
             mode: 'same-origin'  // Do not send CSRF token to another domain.
         }).then(res => res.json());
-       update_board(json)
+        update_board(json)
+    }
+
+    document.querySelector("#load-btn").onclick = async function () {
+        await fetch_for_django("#load-btn");
     }
 
 
