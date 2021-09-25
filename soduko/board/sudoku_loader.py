@@ -12,8 +12,6 @@ class Sudoku:
     def __init__(self):
         self.board = []
         dir_path = LEVEL_PATH.format(level=LEVEL)
-        print(dir_path)
-
         with open(os.path.join(dir_path, f"{SUDOKU_ID}.txt")) as f:
             lines = f.read().splitlines()
             for i in range(9):

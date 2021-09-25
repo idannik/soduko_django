@@ -129,13 +129,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
     document.querySelector("#fill-pencil-marks-btn").onclick = function () {
         let board = get_board();
-        console.log(board);
-
+        fetch_for_django("#fill-pencil-marks-btn", {"board" : board})
     }
 
     document.querySelector("#suggest-btn").onclick = function () {
         let board = get_board();
-        console.log(board)
+        fetch_for_django("#suggest-btn", {"board" : board})
     }
     const stripTrailingSlash = (str) => {
         return str.endsWith('/') ?
