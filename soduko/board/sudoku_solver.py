@@ -16,6 +16,10 @@ class SudokuSuggester:
             [str(self.board[i][j]) for i in range(9) for j in range(9)]
         ).replace("0", ".")
 
+    @property
+    def options(self):
+        return self.options_handler.options
+
     def solve(self):
         while True:
             next_steps = self.options_handler.next_step()
@@ -36,11 +40,8 @@ class SudokuSuggester:
     def print_options(self):
         self.options_handler.print_options()
 
-    def get_options(self):
-        return self.options_handler.options
-
     def get_options_list(self):
-        options = deepcopy(self.get_options())
+        options = deepcopy(self.options)
         for i in range(9):
             for j in range(9):
                 options[i][j] = list(options[i][j])

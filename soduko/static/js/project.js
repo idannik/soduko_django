@@ -169,9 +169,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const update_board = (message) => {
         const board = message['board']
         const id = message["id"]
-        const options = message['options']
-        console.log(message)
-        console.log('here2')
+        const pencil_marks = message['pencil_marks']
+        console.log(pencil_marks)
         for (let i = 0; i < 9; i++) {
             for (let j = 0; j < 9; j++) {
                 let div = get_cell_according_to_row_and_col(i, j, id)
@@ -179,25 +178,22 @@ document.addEventListener("DOMContentLoaded", function () {
                     if (board[i][j] > 0) {
                         set_div_pencil_mode(div, false)
                         div.textContent = board[i][j]
-                        console.log(div)
-                        console.log(board[i][j])
                         div.disabled = true
                         div.style.backgroundColor = "lightgray"
                         div.pencil_mode = false
-
                     } else {
                         div.textContent = ""
                         div.disabled = false
-                        if (options && options[i][j]) {
+                        if (pencil_marks && pencil_marks[i][j]) {
                             set_div_pencil_mode(div, true)
-                            let numbers = options[i][j]
+                            let numbers = pencil_marks[i][j]
+                            console.log(numbers)
                             numbers.sort()
                             div.textContent = numbers.join(" ")
                         } else {
                             div.pencil_mode = false
                         }
                         div.style.backgroundColor = ''
-
                     }
 
                 }
